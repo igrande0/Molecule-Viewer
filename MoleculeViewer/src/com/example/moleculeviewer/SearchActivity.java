@@ -1,31 +1,60 @@
 package com.example.moleculeviewer;
 
+import java.util.ArrayList;
+
 import android.os.Bundle;
+import android.app.ActionBar;
 import android.app.Activity;
-import android.app.ListActivity;
-import android.app.SearchManager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.support.v4.app.NavUtils;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
 
 public class SearchActivity extends Activity {
+	private ArrayList<String> listItems = new ArrayList<String>();
+	private ListView mListView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.search_activity);
-		// Show the Up button in the action bar.
-		setupActionBar();
-		Intent intent = getIntent();
-		if (Intent.ACTION_SEARCH.equals(intent.getAction())){
-			String search = intent.getStringExtra(SearchManager.QUERY);
-			mySearch(search);
+		setContentView(R.layout.activity_search);
+		
+		// set up the ListView
+		mListView = (ListView) findViewById(R.id.list_view);
+		mListView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,listItems));
+		mListView.setOnItemClickListener(new OnItemClickListener(){
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position,
+					long id) {
+				Intent searchIntent = new Intent(getApplicationContext(), MoleculeMenuActivity.class);
+		    	searchIntent.putExtra("MOLECULE_NAME", listItems.get(position));
+		    	startActivity(searchIntent);
+			}
+		});
+		
+		// deal with incoming searches from MainActivity
+		Bundle extras = getIntent().getExtras();
+		if (extras != null){
+			String search = extras.getString("SEARCH_TERM");
+			setupActionBar(search);
+			if(search.equals("")) {
+				displayAllMolecules();
+			}
+			else {
+				searchMolecules(search);
+			}
 		}
-		else{
-			System.out.println("Fail");
+		else {
+			setupActionBar("");
+			displayAllMolecules();
 		}
 	}
 
@@ -33,9 +62,16 @@ public class SearchActivity extends Activity {
 	 * Set up the {@link android.app.ActionBar}, if the API is available.
 	 */
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	private void setupActionBar() {
+	private void setupActionBar(String search) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			getActionBar().setDisplayHomeAsUpEnabled(true);
+			ActionBar ab = getActionBar();
+			ab.setDisplayHomeAsUpEnabled(true);
+			if(!search.equals("")) {
+				setTitle(search);
+			}
+			else {
+				setTitle("All Molecules");
+			}
 		}
 	}
 
@@ -63,8 +99,26 @@ public class SearchActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 	
-	void mySearch(String search){
-		//TODO
+	/**
+	 * called if there is an incoming search term
+	 */
+	private void searchMolecules(String search){
+		// TODO search XML and populate list with matches
+		
+		// placeholder for now
+		for(int i = 0; i < 20; ++i) {
+			listItems.add("Search Result " + Integer.toString(i));
+		}
+		((BaseAdapter)mListView.getAdapter()).notifyDataSetChanged();
 	}
-
+	
+	private void displayAllMolecules() {
+		// TODO search XML and populate list with all molecules
+		
+		// placeholder for now
+		for(int i = 0; i < 20; ++i) {
+			listItems.add("Molecule " + Integer.toString(i));
+		}
+		((BaseAdapter)mListView.getAdapter()).notifyDataSetChanged();
+	}
 }

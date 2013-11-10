@@ -8,5 +8,9 @@
     <string name="search_message">Enter molecule</string>
     <string name="button_browse">Browse</string>
     <string name="title_activity_search">SearchActivity</string>
+    <string name="title_activity_molecule_menu">MoleculeMenuActivity</string>
+    <string name="title_activity_two_dmodel">TwoDModelActivity</string>
+    <string name="title_activity_three_dmodel">ThreeDModelActivity</string>
+    <string name="title_activity_data">DataActivity</string>
 
 </resources>

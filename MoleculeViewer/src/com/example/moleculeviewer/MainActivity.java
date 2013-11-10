@@ -2,7 +2,6 @@ package com.example.moleculeviewer;
 
 import android.os.Bundle;
 import android.app.Activity;
-import android.app.SearchManager;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
@@ -24,13 +23,22 @@ public class MainActivity extends Activity {
         return true;
     }
     
-    /* Called when user clicks the search button */
+    /**
+     * Called when user clicks the search button
+     */
     public void search(View view){
     	Intent searchIntent = new Intent(this, SearchActivity.class);
     	EditText searchText = (EditText) findViewById(R.id.search_message);
     	String search = searchText.getText().toString();
-    	searchIntent.putExtra(SearchManager.QUERY, search);
+    	searchIntent.putExtra("SEARCH_TERM", search);
     	startActivity(searchIntent);
     }
     
+    /**
+     * Called when user clicks the browse button
+     */
+    public void browse(View view){
+    	Intent searchIntent = new Intent(this, SearchActivity.class);
+    	startActivity(searchIntent);
+    }
 }
