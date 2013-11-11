@@ -6,7 +6,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="button_search">Search</string>
     <string name="search_message">Enter molecule</string>
-    <string name="button_browse">Browse</string>
+    <string name="button_browse">Browse All</string>
     <string name="title_activity_search">SearchActivity</string>
     <string name="title_activity_molecule_menu">MoleculeMenuActivity</string>
     <string name="title_activity_two_dmodel">TwoDModelActivity</string>
