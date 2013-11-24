@@ -3,10 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".TwoDModelActivity" >
-
-    <TextView
-        android:id="@+id/placeholder_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+	<com.example.moleculeviewer.TwoDModelView
+		android:id="@+id/two_d_view"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"/>
 
 </RelativeLayout>

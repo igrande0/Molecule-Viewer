@@ -1,5 +1,8 @@
 package com.example.moleculeviewer;
 
+//import java.util.Arrays;
+//import java.util.List;
+
 import android.os.Bundle;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -23,9 +26,8 @@ public class TwoDModelActivity extends Activity {
 		if (extras != null){
 			moleculeName = extras.getString("MOLECULE_NAME");
 		}
-		
-		TextView placeholder = (TextView) findViewById(R.id.placeholder_text);
-		placeholder.setText("2D Model for " + moleculeName);
+		TwoDModelView moleculeView= (TwoDModelView) findViewById(R.id.two_d_view);
+		moleculeView.initData();
 		
 		// set up action bar
 		setupActionBar();
