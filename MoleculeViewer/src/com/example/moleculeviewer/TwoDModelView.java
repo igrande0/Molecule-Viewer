@@ -1,5 +1,6 @@
 package com.example.moleculeviewer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -18,8 +19,9 @@ public class TwoDModelView extends View {
 	int widthMargin;
 	int heightMargin;
 	int relativeFontSizeConstant = 20000;
-	List<Atom> molecule;
-	List<Bond> bondList;
+	int idealPixelOffset = 5;
+	List<Atom> molecule = new ArrayList<Atom>();
+	List<Bond> bondList = new ArrayList<Bond>();
 	
 	Paint myPaint= new Paint();
 	
@@ -42,11 +44,15 @@ public class TwoDModelView extends View {
 	}
 	
 	public void initData(){
-		molecule.add(new Atom(.35,.12,"H"));
-		molecule.add(new Atom(.35,.88,"H"));
-		molecule.add(new Atom(.7,.5,"O"));
-		bondList.add(new Bond(0,2,1));
-		bondList.add(new Bond(1,2,1));
+		molecule.add(new Atom(.35,.5,"H"));
+		molecule.add(new Atom(.65,.5,"H"));
+		molecule.add(new Atom(.5,.65,"H"));
+		molecule.add(new Atom(.5,.35,"H"));
+		molecule.add(new Atom(.5,.5,"C"));
+		bondList.add(new Bond(0,4,1));
+		bondList.add(new Bond(1,4,1));
+		bondList.add(new Bond(2,4,1));
+		bondList.add(new Bond(3,4,1));
 		invalidate();
 	}
 	
@@ -70,43 +76,26 @@ public class TwoDModelView extends View {
 
 	    return size;
 	}
-	/*
-	boolean getLineIntersection(float p0_x, float p0_y, float p1_x, float p1_y, float p2_x, float p2_y, float p3_x, float p3_y, float *i_x, float *i_y){
-		float s1_x, s1_y, s2_x, s2_y;
-		s1_x = p1_x - p0_x;
-		s1_y = p1_y - p0_y;
-		s2_x = p3_x - p2_x;
-		s2_y = p3_y - p2_y;
-		
-		float s, t;
-		s = (-s1_y * (p0_x - p2_x) + s1_x * (p0_y - p2_y)) / (-s2_x * s1_y + s1_x * s2_y);
-		t = ( s2_x * (p0_y - p2_y) - s2_y * (p0_x - p2_x)) / (-s2_x * s1_y + s1_x * s2_y);
-
-		if (s >= 0 && s <= 1 && t >= 0 && t <= 1)
-		{
-			// Collision detected
-			if (i_x != NULL)
-				*i_x = p0_x + (t * s1_x);
-			if (i_y != NULL)
-				*i_y = p0_y + (t * s1_y);
-			return true;
-		}
-
-		return false; // No collision
-	}*/ //Collision detection logic, also returns the point. The trick is to manipulate this into valid Java code
 	
-	/*
-	boolean checkFourIntersections(float p0_x, float p0_y, float p1_x, float p1_y){ //Check the line being drawn with 4 small lines drawn around the text in a rectangle. If there is a collision use that new point as a coordinate
-	//To drawn the original line.
-		if(getLineInterestion(p0_x, p0_y, p1_x, p1_y...))
-		else if(getLineInterestion(p0_x, p0_y, p1_x, p1_y...))
+	private double calculateAbsSlope(double x1, double y1, double x2, double y2){ //return -1 for vertical line
+		double rise;
+		double run;
+		rise=y1-y2;
+		run=x1-x2;
+		if(run==0){
+			return -1;
+		}
+		else if(rise/run < 0){
+			return -rise/run;
+		}
+		else return rise/run;
 	}
-	*/
 	
 	@Override
 	public void onDraw(Canvas canvas){
 		myPaint.setColor(Color.GRAY);
 		canvas.drawPaint(myPaint);
+		myPaint.setStyle(Paint.Style.STROKE);
 		myPaint.setColor(Color.WHITE);
 		for(Atom atom : molecule){
 			atom.x=atom.x*viewWidth;
@@ -115,26 +104,21 @@ public class TwoDModelView extends View {
 			canvas.drawText(atom.name, (float) atom.x, (float) atom.y, myPaint);
 		}
 		for(Bond bond : bondList){
-			int singleXoff1=0;
-			int singleXoff2=0;
-			int singleYoff1=0;
-			int singleYoff2=0;
-			int doubleXoff1=3;
-			int doubleXoff2=3;
-			int doubleXoff3=3;
-			int doubleXoff4=3;
-			int doubleYoff1=3;
-			int doubleYoff2=3;
-			int doubleYoff4=3;
-			int doubleYoff3=3;
-			switch(bond.type){
-			case 1:
-				//checkFourIntersection((float) molecule.get(bond.first).x, (float) molecule.get(bond.first).y, (float) molecule.get(bond.second).x, (float) molecule.get(bond.second).y);
-				break;
-			case 2:
-
-				break;
-			}
+			float singleXoff1=0;
+			float singleXoff2=0;
+			float singleYoff1=0;
+			float singleYoff2=0;
+			float doubleXoff1=3;
+			float doubleXoff2=3;
+			float doubleXoff3=3;
+			float doubleXoff4=3;
+			float doubleYoff1=3;
+			float doubleYoff2=3;
+			float doubleYoff4=3;
+			float doubleYoff3=3;
+			boolean specialCase=false;
+			Atom firstBondAtom=molecule.get(bond.first);
+			Atom secondBondAtom=molecule.get(bond.second);
 			//Calculate offsets here
 			
 			
@@ -142,16 +126,84 @@ public class TwoDModelView extends View {
 			canvas.drawLine(x1*d, y1*d, x2*d, y2*d, paint);
 			Need to test this effect, should center line on text?
 			*/
+			//Offset Logic
+			double slope = calculateAbsSlope(firstBondAtom.x,firstBondAtom.y,secondBondAtom.x,secondBondAtom.y);
+			System.out.println(slope);
+			
+			if( firstBondAtom.x - secondBondAtom.x < 0 && firstBondAtom.y - secondBondAtom.y < 0){
+				//singleXoff1=pos; singleXoff2=neg; singleYoff1=neg; singleYoff2=neg;
+				singleXoff1=myPaint.measureText(firstBondAtom.name); singleXoff2=-idealPixelOffset; singleYoff1=-(myPaint.measureText(firstBondAtom.name.substring(0, 1))/2); singleYoff2=-(myPaint.measureText(secondBondAtom.name.substring(0, 1))/2);
+				//canvas.drawText(firstBondAtom.name, (float) firstBondAtom.x-myPaint.measureText(firstBondAtom.name), (float) firstBondAtom.y+(myPaint.measureText(firstBondAtom.name)/2), myPaint);
+				//canvas.drawText(secondBondAtom.name, (float) secondBondAtom.x+idealPixelOffset, (float) secondBondAtom.y+(myPaint.measureText(secondBondAtom.name)/2), myPaint);
+			}
+			else if( firstBondAtom.x - secondBondAtom.x > 0 && firstBondAtom.y - secondBondAtom.y < 0){
+				//singleXoff1=neg; singleXoff2=pos; singleYoff1=neg; singleYoff2=neg;
+				singleXoff1=-idealPixelOffset; singleXoff2=myPaint.measureText(secondBondAtom.name); singleYoff1=-(myPaint.measureText(firstBondAtom.name.substring(0, 1))/2); singleYoff2=-(myPaint.measureText(secondBondAtom.name.substring(0, 1))/2);
+				//canvas.drawText(firstBondAtom.name, (float) firstBondAtom.x+idealPixelOffset, (float) firstBondAtom.y+(myPaint.measureText(firstBondAtom.name)/2), myPaint);
+				//canvas.drawText(secondBondAtom.name, (float) secondBondAtom.x-myPaint.measureText(secondBondAtom.name), (float) secondBondAtom.y+(myPaint.measureText(secondBondAtom.name)/2), myPaint);
+			}
+			else if( firstBondAtom.x - secondBondAtom.x < 0 && firstBondAtom.y - secondBondAtom.y > 0){
+				//singleXoff1=pos; singleXoff2=neg; singleYoff1=neg; singleYoff2=neg;
+				singleXoff1=myPaint.measureText(firstBondAtom.name); singleXoff2=-idealPixelOffset; singleYoff1=-(myPaint.measureText(firstBondAtom.name.substring(0, 1))/2); singleYoff2=-(myPaint.measureText(secondBondAtom.name.substring(0, 1))/2);
+				//canvas.drawText(firstBondAtom.name, (float) firstBondAtom.x-myPaint.measureText(firstBondAtom.name), (float) firstBondAtom.y+(myPaint.measureText(firstBondAtom.name)/2), myPaint);
+				//canvas.drawText(secondBondAtom.name, (float) secondBondAtom.x+idealPixelOffset, (float) secondBondAtom.y+(myPaint.measureText(secondBondAtom.name)/2), myPaint);
+			}
+			else if( firstBondAtom.x - secondBondAtom.x > 0 && firstBondAtom.y - secondBondAtom.y > 0){
+				//singleXoff1=neg; singleXoff2=pos; singleYoff1=neg; singleYoff2=neg;
+				singleXoff1=-idealPixelOffset; singleXoff2=myPaint.measureText(secondBondAtom.name); singleYoff1=-(myPaint.measureText(firstBondAtom.name.substring(0, 1))/2); singleYoff2=-(myPaint.measureText(secondBondAtom.name.substring(0, 1))/2);
+				//canvas.drawText(firstBondAtom.name, (float) firstBondAtom.x+idealPixelOffset, (float) firstBondAtom.y+(myPaint.measureText(firstBondAtom.name)/2), myPaint);
+				//canvas.drawText(secondBondAtom.name, (float) secondBondAtom.x-myPaint.measureText(secondBondAtom.name), (float) secondBondAtom.y+(myPaint.measureText(secondBondAtom.name)/2), myPaint);
+			}
+			else if(firstBondAtom.x - secondBondAtom.x == 0){
+				if(firstBondAtom.y < secondBondAtom.y){
+					singleXoff1=myPaint.measureText(firstBondAtom.name)/2;
+					singleXoff2=myPaint.measureText(secondBondAtom.name)/2;
+					singleYoff1=(myPaint.measureText(secondBondAtom.name.substring(0, 1))/2);
+					singleYoff2=-(myPaint.measureText(secondBondAtom.name.substring(0, 1))+idealPixelOffset);
+				}
+				else{
+					singleXoff1=myPaint.measureText(firstBondAtom.name)/2;
+					singleXoff2=myPaint.measureText(secondBondAtom.name)/2;
+					singleYoff1=-(myPaint.measureText(secondBondAtom.name.substring(0, 1)));
+					singleYoff2=(myPaint.measureText(secondBondAtom.name.substring(0, 1))/2);
+				}
+				specialCase=true;
+			}
+			else if(firstBondAtom.y - secondBondAtom.y == 0){
+				if(firstBondAtom.x < secondBondAtom.x){
+					singleXoff1=myPaint.measureText(firstBondAtom.name.substring(0, 1));
+					singleXoff2=-(myPaint.measureText(secondBondAtom.name.substring(0, 1))/2);
+					singleYoff1=-(myPaint.measureText(firstBondAtom.name.substring(0, 1))/2);
+					singleYoff2=-(myPaint.measureText(secondBondAtom.name.substring(0, 1))/2);
+				}
+				else{
+					singleXoff1=-(myPaint.measureText(firstBondAtom.name.substring(0, 1))/2);
+					singleXoff2=(myPaint.measureText(secondBondAtom.name.substring(0, 1)));
+					singleYoff1=-(myPaint.measureText(firstBondAtom.name.substring(0, 1))/2);
+					singleYoff2=-(myPaint.measureText(secondBondAtom.name.substring(0, 1))/2);
+				}
+				specialCase=true;
+			}
+
+			System.out.println("Xoff1" + singleXoff1 + " Xoff2" + singleXoff2 + " Yoff1"+singleYoff1+" Yoff2"+singleYoff2);
+			
 			switch(bond.type){
 			case 1: //single
-				canvas.drawLine( (float) molecule.get(bond.first).x - singleXoff1, (float) molecule.get(bond.first).y - singleYoff1, (float) molecule.get(bond.second).x - singleXoff2, (float) molecule.get(bond.second).y - singleYoff2, myPaint);
+				myPaint.setColor(Color.DKGRAY);
+				canvas.drawLine( (float) firstBondAtom.x + singleXoff1, (float) firstBondAtom.y + singleYoff1, (float) secondBondAtom.x + singleXoff2, (float) secondBondAtom.y + singleYoff2, myPaint);
+				myPaint.setStyle(Paint.Style.FILL);
+				myPaint.setColor(Color.BLACK);
+				if(!specialCase){
+					canvas.drawCircle((float) firstBondAtom.x + singleXoff1, (float) firstBondAtom.y + singleYoff1, 5, myPaint);
+					canvas.drawCircle((float) secondBondAtom.x + singleXoff2, (float) secondBondAtom.y + singleYoff2, 5, myPaint);
+				}
 				break;
 			case 2: //double
-				canvas.drawLine( (float) molecule.get(bond.first).x - doubleXoff1, (float) molecule.get(bond.first).y - doubleYoff1, (float) molecule.get(bond.second).x - doubleXoff2, (float) molecule.get(bond.second).y - doubleYoff2, myPaint);
-				canvas.drawLine( (float) molecule.get(bond.first).x - doubleXoff3, (float) molecule.get(bond.first).y - doubleYoff3, (float) molecule.get(bond.second).x - doubleXoff4, (float) molecule.get(bond.second).y - doubleYoff4, myPaint);
+				canvas.drawLine( (float) firstBondAtom.x + doubleXoff1, (float) firstBondAtom.y + doubleYoff1, (float) secondBondAtom.x + doubleXoff2, (float) secondBondAtom.y + doubleYoff2, myPaint);
+				canvas.drawLine( (float) firstBondAtom.x + doubleXoff3, (float) firstBondAtom.y + doubleYoff3, (float) secondBondAtom.x + doubleXoff4, (float) secondBondAtom.y + doubleYoff4, myPaint);
 				break;
 			default: //Unknown, single drawn
-				canvas.drawLine( (float) molecule.get(bond.first).x - singleXoff1, (float) molecule.get(bond.first).y - singleYoff1, (float) molecule.get(bond.second).x - singleXoff2, (float) molecule.get(bond.second).y - singleYoff2, myPaint);
+				canvas.drawLine( (float) firstBondAtom.x + singleXoff1, (float) firstBondAtom.y + singleYoff1, (float) secondBondAtom.x + singleXoff2, (float) secondBondAtom.y + singleYoff2, myPaint);
 				break;
 			}
 		}
