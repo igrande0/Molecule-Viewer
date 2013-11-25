@@ -1,5 +1,6 @@
 package com.example.moleculeviewer;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import android.os.Bundle;
@@ -21,6 +22,8 @@ import android.os.Build;
 public class SearchActivity extends Activity {
 	private ArrayList<String> listItems = new ArrayList<String>();
 	private ListView mListView;
+	private DataXmlParser Parser = new DataXmlParser();
+	private ArrayList<Chemical> Chemicals = new ArrayList<Chemical>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -114,10 +117,17 @@ public class SearchActivity extends Activity {
 	
 	private void displayAllMolecules() {
 		// TODO search XML and populate list with all molecules
+		InputStream is = getResources().openRawResource(R.xml.molecules);
+		try{
+			Chemicals = Parser.parse(is);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
 		
 		// placeholder for now
-		for(int i = 0; i < 20; ++i) {
-			listItems.add("Molecule " + Integer.toString(i));
+		for(int i = 0; i < Chemicals.size(); ++i) {
+			listItems.add(Chemicals.get(i).bond_string);
 		}
 		((BaseAdapter)mListView.getAdapter()).notifyDataSetChanged();
 	}

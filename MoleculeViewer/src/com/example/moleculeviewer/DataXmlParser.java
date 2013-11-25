@@ -3,7 +3,6 @@ package com.example.moleculeviewer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -12,7 +11,7 @@ import android.util.Xml;
 public class DataXmlParser {
 	private static final String ns = null;
 	
-	public List<Chemical> parse(InputStream in) throws XmlPullParserException, IOException {
+	public ArrayList<Chemical> parse(InputStream in) throws XmlPullParserException, IOException {
 		try{
 			XmlPullParser parser = Xml.newPullParser();
 			parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
@@ -24,8 +23,8 @@ public class DataXmlParser {
 		}
 	}
 	
-	private List<Chemical> readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
-	    List<Chemical> chemicals = new ArrayList<Chemical>();
+	private ArrayList<Chemical> readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
+	    ArrayList<Chemical> chemicals = new ArrayList<Chemical>();
 
 	    parser.require(XmlPullParser.START_TAG, ns, "data");
 	    while (parser.next() != XmlPullParser.END_TAG) {
@@ -70,7 +69,7 @@ public class DataXmlParser {
 		String[] data_array = atom_block.split(delim);
 		int atom_count = Integer.parseInt(data_array[0]);
 		int bond_count = Integer.parseInt(data_array[1]);
-		List<Atom> atom_list = new ArrayList<Atom>();
+		ArrayList<Atom> atom_list = new ArrayList<Atom>();
 		int i = 0;
 		float max = 0;
 		for(i=10; i<atom_count; i += 15){
@@ -94,7 +93,7 @@ public class DataXmlParser {
 			String temp_symbol = atom_list.get(j).symbol;
 			atom_list.set(j, new Atom(temp_x, temp_y, temp_z, temp_symbol));
 		}
-		List<Bond> bond_list = new ArrayList<Bond>();
+		ArrayList<Bond> bond_list = new ArrayList<Bond>();
 		while(i<bond_count){
 			int atom1 = Integer.parseInt(data_array[i]);
 			int atom2 = Integer.parseInt(data_array[i+1]);

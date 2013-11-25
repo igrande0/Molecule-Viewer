@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
@@ -104,7 +105,7 @@ public class TwoDModelView extends View {
 	
 	@Override
 	public void onDraw(Canvas canvas){
-		myPaint.setColor(Color.GREY);
+		myPaint.setColor(Color.GRAY);
 		canvas.drawPaint(myPaint);
 		myPaint.setColor(Color.WHITE);
 		for(Atom atom : molecule){
