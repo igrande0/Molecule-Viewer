@@ -8,7 +8,6 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 import android.support.v4.app.NavUtils;
 import android.annotation.TargetApi;
 import android.os.Build;
