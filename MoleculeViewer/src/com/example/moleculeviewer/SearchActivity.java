@@ -120,7 +120,7 @@ public class SearchActivity extends Activity {
 			InputStream is = getResources().getAssets().open("molecules.xml");
 			Chemicals = Parser.parse(is);
 			for(int i = 0; i < Chemicals.size(); ++i) {
-				listItems.add(Chemicals.get(i).bond_string);
+				listItems.add(Chemicals.get(i).name);
 			}
 			((BaseAdapter)mListView.getAdapter()).notifyDataSetChanged();
 		}

@@ -50,6 +50,7 @@ public class DataXmlParser {
 	    String formula = null;
 	    String molecular_weight = null;
 		String bond_string = null;
+		String molecule_name = parser.getAttributeValue(null, "name");
 	    while (parser.next() != XmlPullParser.END_TAG) {
 	        if (parser.getEventType() != XmlPullParser.START_TAG) {
 	            continue;
@@ -106,7 +107,7 @@ public class DataXmlParser {
 		}
 		Structure structure = new Structure(atom_list, bond_list);
 		
-	    return new Chemical(structure, formula, molecular_weight, bond_string);
+	    return new Chemical(structure, formula, molecular_weight, bond_string, molecule_name);
 	}
 
 
