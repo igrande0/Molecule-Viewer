@@ -3,6 +3,8 @@ package com.example.moleculeviewer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -65,8 +67,8 @@ public class DataXmlParser {
 	            skip(parser);
 	        }
 	    }
-		String delim = "[ ]";
-		String[] data_array = atom_block.split(delim);
+		String[] data_array = atom_block.split("\\s+");
+		System.out.println(Arrays.toString(data_array));
 		int atom_count = Integer.parseInt(data_array[0]);
 		int bond_count = Integer.parseInt(data_array[1]);
 		ArrayList<Atom> atom_list = new ArrayList<Atom>();
@@ -109,16 +111,16 @@ public class DataXmlParser {
 
 
 	private String readData(XmlPullParser parser) throws IOException, XmlPullParserException {
-	    parser.require(XmlPullParser.START_TAG, ns, "title");
+	    parser.require(XmlPullParser.START_TAG, ns, null);
 	    String data = readText(parser);
-	    parser.require(XmlPullParser.END_TAG, ns, "title");
+	    parser.require(XmlPullParser.END_TAG, ns, null);
 	    return data;
 	}
 	
 	private String readText(XmlPullParser parser) throws IOException, XmlPullParserException {
 	    String result = "";
 	    if (parser.next() == XmlPullParser.TEXT) {
-	        result = parser.getText();
+	        result = parser.getText().trim();
 	        parser.nextTag();
 	    }
 	    return result;

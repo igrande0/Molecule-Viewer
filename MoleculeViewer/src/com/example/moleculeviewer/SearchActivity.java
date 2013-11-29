@@ -116,19 +116,16 @@ public class SearchActivity extends Activity {
 	}
 	
 	private void displayAllMolecules() {
-		// TODO search XML and populate list with all molecules
-		InputStream is = getResources().openRawResource(R.xml.molecules);
 		try{
+			InputStream is = getResources().getAssets().open("molecules.xml");
 			Chemicals = Parser.parse(is);
+			for(int i = 0; i < Chemicals.size(); ++i) {
+				listItems.add(Chemicals.get(i).bond_string);
+			}
+			((BaseAdapter)mListView.getAdapter()).notifyDataSetChanged();
 		}
 		catch(Exception e){
 			e.printStackTrace();
 		}
-		
-		// placeholder for now
-		for(int i = 0; i < Chemicals.size(); ++i) {
-			listItems.add(Chemicals.get(i).bond_string);
-		}
-		((BaseAdapter)mListView.getAdapter()).notifyDataSetChanged();
 	}
 }
