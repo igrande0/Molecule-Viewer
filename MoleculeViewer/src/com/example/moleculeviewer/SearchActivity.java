@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.support.v4.app.NavUtils;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
@@ -22,7 +23,9 @@ public class SearchActivity extends Activity {
 	private ListView mListView;
 	private DataXmlParser Parser = new DataXmlParser();
 	private ArrayList<Chemical> Chemicals = new ArrayList<Chemical>();
+	private ArrayList<Chemical> searchResults = new ArrayList<Chemical>();
 	private ChemicalAdapter mAdapter;
+	private boolean isSearch = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,11 +40,25 @@ public class SearchActivity extends Activity {
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
 				Intent searchIntent = new Intent(getApplicationContext(), MoleculeMenuActivity.class);
-
-				searchIntent.putExtra("SELECTED_MOLECULE", Chemicals.get(position));
+				if(isSearch) {
+					searchIntent.putExtra("SELECTED_MOLECULE", searchResults.get(position));
+				}
+				else {
+					searchIntent.putExtra("SELECTED_MOLECULE", Chemicals.get(position));
+				}
 			   	startActivity(searchIntent);
 			}
 		});
+		
+		// get all chemicals from XML file
+		try {
+			InputStream is = getResources().getAssets().open("molecules.xml");
+			Chemicals = Parser.parse(is);
+			Collections.sort(Chemicals, Chemical.NameAscending);
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
 		
 		// deal with incoming searches from MainActivity
 		Bundle extras = getIntent().getExtras();
@@ -52,11 +69,13 @@ public class SearchActivity extends Activity {
 				displayAllMolecules();
 			}
 			else {
+				isSearch = true;
 				searchMolecules(search);
 			}
 		}
 		else {
 			setupActionBar("");
+			isSearch = false;
 			displayAllMolecules();
 		}
 	}
@@ -70,7 +89,7 @@ public class SearchActivity extends Activity {
 			ActionBar ab = getActionBar();
 			ab.setDisplayHomeAsUpEnabled(true);
 			if(!search.equals("")) {
-				setTitle(search);
+				setTitle("Search: " + search);
 			}
 			else {
 				setTitle("All Molecules");
@@ -103,18 +122,19 @@ public class SearchActivity extends Activity {
 	}
 	
 	private void searchMolecules(String search){
-		displayAllMolecules();
+		for(int i = 0; i < Chemicals.size(); ++i){
+			Chemical current = Chemicals.get(i);
+			if(current.formula.toLowerCase().contains(search.toLowerCase())
+					||current.molecular_weight.toLowerCase().contains(search.toLowerCase())
+					||current.bond_string.toLowerCase().contains(search.toLowerCase())
+					||current.name.toLowerCase().contains(search.toLowerCase())) {
+				searchResults.add(current);
+			}
+		}
+		mAdapter.updateAdapter(searchResults);
 	}
 	
 	private void displayAllMolecules() {
-		try{
-			InputStream is = getResources().getAssets().open("molecules.xml");
-			Chemicals = Parser.parse(is);
-			Collections.sort(Chemicals, Chemical.NameAscending);
-			mAdapter.updateAdapter(Chemicals);
-		}
-		catch(Exception e){
-			e.printStackTrace();
-		}
+		mAdapter.updateAdapter(Chemicals);
 	}
 }
