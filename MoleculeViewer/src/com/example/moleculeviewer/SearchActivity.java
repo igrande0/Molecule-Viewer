@@ -22,14 +22,16 @@ public class SearchActivity extends Activity {
 	private ListView mListView;
 	private DataXmlParser Parser = new DataXmlParser();
 	private ArrayList<Chemical> Chemicals = new ArrayList<Chemical>();
+	private ChemicalAdapter mAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search);
 
-		
+		mAdapter = new ChemicalAdapter(this, Chemicals);
 		mListView = (ListView) findViewById(R.id.list_view);
+		mListView.setAdapter(mAdapter);
 		mListView.setOnItemClickListener(new OnItemClickListener(){
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,
@@ -102,7 +104,6 @@ public class SearchActivity extends Activity {
 	
 	private void searchMolecules(String search){
 		displayAllMolecules();
-		//mChemicalAdapter.notifyDataSetChanged();
 	}
 	
 	private void displayAllMolecules() {
@@ -110,10 +111,7 @@ public class SearchActivity extends Activity {
 			InputStream is = getResources().getAssets().open("molecules.xml");
 			Chemicals = Parser.parse(is);
 			Collections.sort(Chemicals, Chemical.NameAscending);
-			for(int i = 0; i < Chemicals.size(); ++i) {
-				System.out.println(Chemicals.get(i).name);
-			}
-			mListView.setAdapter(new ChemicalAdapter(this, Chemicals));
+			mAdapter.updateAdapter(Chemicals);
 		}
 		catch(Exception e){
 			e.printStackTrace();

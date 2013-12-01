@@ -33,6 +33,12 @@ public class ChemicalAdapter extends BaseAdapter {
 		formulaSubtitle = false;
 	}
 	
+	public void updateAdapter(ArrayList<Chemical> new_items){
+		mList.clear();
+		mList.addAll(new_items);
+		notifyDataSetChanged();
+	}
+	
 	@Override
 	public int getCount() {
 		return mList.size();
