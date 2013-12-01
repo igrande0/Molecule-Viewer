@@ -19,7 +19,7 @@ import android.content.Intent;
 import android.os.Build;
 
 public class MoleculeMenuActivity extends Activity {
-	private String moleculeName;
+	private Chemical molecule;
 	private ArrayList<String> listItems = new ArrayList<String>();
 	private ListView mListView;
 	
@@ -44,19 +44,19 @@ public class MoleculeMenuActivity extends Activity {
 				switch(position) {
 					case 0: {
 						Intent searchIntent = new Intent(getApplicationContext(), TwoDModelActivity.class);
-						searchIntent.putExtra("MOLECULE_NAME", moleculeName);
+						searchIntent.putExtra("SELECTED_MOLECULE", molecule);
 				    	startActivity(searchIntent);
 						break;
 					}
 					case 1: {
 						Intent searchIntent = new Intent(getApplicationContext(), ThreeDModelActivity.class);
-						searchIntent.putExtra("MOLECULE_NAME", moleculeName);
+						searchIntent.putExtra("SELECTED_MOLECULE", molecule);
 				    	startActivity(searchIntent);
 						break;
 					}
 					case 2: {
 						Intent searchIntent = new Intent(getApplicationContext(), DataActivity.class);
-						searchIntent.putExtra("MOLECULE_NAME", moleculeName);
+						searchIntent.putExtra("SELECTED_MOLECULE", molecule);
 				    	startActivity(searchIntent);
 						break;
 					}
@@ -69,10 +69,8 @@ public class MoleculeMenuActivity extends Activity {
 		});
 		
 		// deal with the incoming molecule name from SearchActivity
-		Bundle extras = getIntent().getExtras();
-		if (extras != null){
-			moleculeName = extras.getString("MOLECULE_NAME");
-		}
+		Intent intent = getIntent();
+		molecule = (Chemical)intent.getSerializableExtra("SELECTED_MOLECULE");
 		setupActionBar();
 	}
 
@@ -84,7 +82,7 @@ public class MoleculeMenuActivity extends Activity {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			ActionBar ab = getActionBar();
 			ab.setDisplayHomeAsUpEnabled(true);
-			ab.setTitle(moleculeName);
+			ab.setTitle(molecule.name);
 		}
 	}
 

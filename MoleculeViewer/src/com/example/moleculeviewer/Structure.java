@@ -1,8 +1,10 @@
 package com.example.moleculeviewer;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Structure{
+@SuppressWarnings("serial")
+public class Structure implements Serializable{
 	
 	public List<Atom> atom_list;
 	public List<Bond> bond_list;

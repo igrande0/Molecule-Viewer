@@ -8,10 +8,11 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.support.v4.app.NavUtils;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.os.Build;
 
 public class ThreeDModelActivity extends Activity {
-	private String moleculeName;
+	private Chemical molecule;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -19,13 +20,11 @@ public class ThreeDModelActivity extends Activity {
 		setContentView(R.layout.activity_three_dmodel);
 		
 		// get molecule name from parent activity
-		Bundle extras = getIntent().getExtras();
-		if (extras != null){
-			moleculeName = extras.getString("MOLECULE_NAME");
-		}
+		Intent intent = getIntent();
+		molecule = (Chemical)intent.getSerializableExtra("SELECTED_MOLECULE");
 		
 		TextView placeholder = (TextView) findViewById(R.id.placeholder_text);
-		placeholder.setText("3D Model for " + moleculeName);
+		placeholder.setText("3D Model for " + molecule.name);
 		
 		// set up action bar
 		setupActionBar();
@@ -39,7 +38,7 @@ public class ThreeDModelActivity extends Activity {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			ActionBar ab = getActionBar();
 			ab.setDisplayHomeAsUpEnabled(true);
-			ab.setTitle(moleculeName);
+			ab.setTitle(molecule.name);
 			ab.setSubtitle("3D Model");
 		}
 	}

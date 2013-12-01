@@ -2,6 +2,7 @@ package com.example.moleculeviewer;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import android.os.Bundle;
 import android.app.ActionBar;
@@ -11,8 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.support.v4.app.NavUtils;
 import android.annotation.TargetApi;
@@ -20,7 +19,6 @@ import android.content.Intent;
 import android.os.Build;
 
 public class SearchActivity extends Activity {
-	private ArrayList<String> listItems = new ArrayList<String>();
 	private ListView mListView;
 	private DataXmlParser Parser = new DataXmlParser();
 	private ArrayList<Chemical> Chemicals = new ArrayList<Chemical>();
@@ -29,17 +27,17 @@ public class SearchActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search);
+
 		
-		// set up the ListView
 		mListView = (ListView) findViewById(R.id.list_view);
-		mListView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,listItems));
 		mListView.setOnItemClickListener(new OnItemClickListener(){
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
 				Intent searchIntent = new Intent(getApplicationContext(), MoleculeMenuActivity.class);
-		    	searchIntent.putExtra("MOLECULE_NAME", listItems.get(position));
-		    	startActivity(searchIntent);
+
+				searchIntent.putExtra("SELECTED_MOLECULE", Chemicals.get(position));
+			   	startActivity(searchIntent);
 			}
 		});
 		
@@ -102,27 +100,20 @@ public class SearchActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 	
-	/**
-	 * called if there is an incoming search term
-	 */
 	private void searchMolecules(String search){
-		// TODO search XML and populate list with matches
-		
-		// placeholder for now
-		for(int i = 0; i < 20; ++i) {
-			listItems.add("Search Result " + Integer.toString(i));
-		}
-		((BaseAdapter)mListView.getAdapter()).notifyDataSetChanged();
+		displayAllMolecules();
+		//mChemicalAdapter.notifyDataSetChanged();
 	}
 	
 	private void displayAllMolecules() {
 		try{
 			InputStream is = getResources().getAssets().open("molecules.xml");
 			Chemicals = Parser.parse(is);
+			Collections.sort(Chemicals, Chemical.NameAscending);
 			for(int i = 0; i < Chemicals.size(); ++i) {
-				listItems.add(Chemicals.get(i).name);
+				System.out.println(Chemicals.get(i).name);
 			}
-			((BaseAdapter)mListView.getAdapter()).notifyDataSetChanged();
+			mListView.setAdapter(new ChemicalAdapter(this, Chemicals));
 		}
 		catch(Exception e){
 			e.printStackTrace();

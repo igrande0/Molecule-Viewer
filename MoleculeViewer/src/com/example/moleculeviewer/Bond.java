@@ -1,6 +1,9 @@
 package com.example.moleculeviewer;
 
-public class Bond{
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+public class Bond implements Serializable{
 	public int atom1;
 	public int atom2;
 	int bond_number;

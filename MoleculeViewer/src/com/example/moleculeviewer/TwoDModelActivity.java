@@ -10,21 +10,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.os.Build;
 
 public class TwoDModelActivity extends Activity {
-	private String moleculeName;
+	private Chemical molecule;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_two_dmodel);
 		
-		// get molecule name from parent activity
-		Bundle extras = getIntent().getExtras();
-		if (extras != null){
-			moleculeName = extras.getString("MOLECULE_NAME");
-		}
+		// molecule name from parent activity
+		Intent intent = getIntent();
+		molecule = (Chemical)intent.getSerializableExtra("SELECTED_MOLECULE");
 		TwoDModelView moleculeView= (TwoDModelView) findViewById(R.id.two_d_view);
 		moleculeView.initData();
 		
@@ -40,7 +39,7 @@ public class TwoDModelActivity extends Activity {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			ActionBar ab = getActionBar();
 			ab.setDisplayHomeAsUpEnabled(true);
-			ab.setTitle(moleculeName);
+			ab.setTitle(molecule.name);
 			ab.setSubtitle("2D Model");
 		}
 	}

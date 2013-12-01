@@ -1,6 +1,9 @@
 package com.example.moleculeviewer;
 
-public class Atom{
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+public class Atom implements Serializable{
 	public float x;
 	public float y;
 	public float z;
