@@ -36,39 +36,12 @@
         </activity>
         <activity
             android:launchMode="singleTop"
-            android:name="com.example.moleculeviewer.MoleculeMenuActivity"
-            android:label="@string/title_activity_molecule_menu"
+            android:name="com.example.moleculeviewer.MoleculeActivity"
+            android:label="@string/title_activity_two_dmodel"
             android:parentActivityName="com.example.moleculeviewer.SearchActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.moleculeviewer.SearchActivity" />
-        </activity>
-        <activity
-            android:launchMode="singleTop"
-            android:name="com.example.moleculeviewer.MoleculeActivity"
-            android:label="@string/title_activity_two_dmodel"
-            android:parentActivityName="com.example.moleculeviewer.MoleculeMenuActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.moleculeviewer.MoleculeMenuActivity" />
-        </activity>
-        <activity
-            android:launchMode="singleTop"
-            android:name="com.example.moleculeviewer.ThreeDModelActivity"
-            android:label="@string/title_activity_three_dmodel"
-            android:parentActivityName="com.example.moleculeviewer.MoleculeMenuActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.moleculeviewer.MoleculeMenuActivity" />
-        </activity>
-        <activity
-            android:launchMode="singleTop"
-            android:name="com.example.moleculeviewer.DataActivity"
-            android:label="@string/title_activity_data"
-            android:parentActivityName="com.example.moleculeviewer.MoleculeMenuActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.moleculeviewer.MoleculeMenuActivity" />
         </activity>
     </application>
 
