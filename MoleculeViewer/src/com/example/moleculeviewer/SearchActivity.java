@@ -3,6 +3,7 @@ package com.example.moleculeviewer;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Locale;
 
 import android.os.Bundle;
 import android.app.ActionBar;
@@ -14,7 +15,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.support.v4.app.NavUtils;
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
@@ -39,7 +39,7 @@ public class SearchActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
-				Intent searchIntent = new Intent(getApplicationContext(), MoleculeMenuActivity.class);
+				Intent searchIntent = new Intent(getApplicationContext(), MoleculeActivity.class);
 				if(isSearch) {
 					searchIntent.putExtra("SELECTED_MOLECULE", searchResults.get(position));
 				}
@@ -124,10 +124,10 @@ public class SearchActivity extends Activity {
 	private void searchMolecules(String search){
 		for(int i = 0; i < Chemicals.size(); ++i){
 			Chemical current = Chemicals.get(i);
-			if(current.formula.toLowerCase().contains(search.toLowerCase())
-					||current.molecular_weight.toLowerCase().contains(search.toLowerCase())
-					||current.bond_string.toLowerCase().contains(search.toLowerCase())
-					||current.name.toLowerCase().contains(search.toLowerCase())) {
+			if(current.formula.toLowerCase(Locale.ENGLISH).contains(search.toLowerCase(Locale.ENGLISH))
+					||current.molecular_weight.toLowerCase(Locale.ENGLISH).contains(search.toLowerCase(Locale.ENGLISH))
+					||current.bond_string.toLowerCase(Locale.ENGLISH).contains(search.toLowerCase(Locale.ENGLISH))
+					||current.name.toLowerCase(Locale.ENGLISH).contains(search.toLowerCase(Locale.ENGLISH))) {
 				searchResults.add(current);
 			}
 		}

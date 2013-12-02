@@ -45,7 +45,7 @@
         </activity>
         <activity
             android:launchMode="singleTop"
-            android:name="com.example.moleculeviewer.TwoDModelActivity"
+            android:name="com.example.moleculeviewer.MoleculeActivity"
             android:label="@string/title_activity_two_dmodel"
             android:parentActivityName="com.example.moleculeviewer.MoleculeMenuActivity" >
             <meta-data

@@ -58,11 +58,11 @@ public class TwoDModelView extends View {
 	
 	@Override
 	protected void onSizeChanged(int xNew, int yNew, int xOld, int yOld){
-		super.onSizeChanged(xNew, yNew, xOld, yOld);
 		viewWidth = xNew;
 		viewHeight = yNew;
 		zeroWidth = xNew/2;
 		zeroHeight = yNew/2;
+		super.onSizeChanged(xNew, yNew, xOld, yOld);
 	}
 	
 	private int determineMaxTextSize(String str, float maxWidth)
@@ -98,10 +98,8 @@ public class TwoDModelView extends View {
 		myPaint.setStyle(Paint.Style.STROKE);
 		myPaint.setColor(Color.WHITE);
 		for(Atom atom : molecule){
-			atom.x=atom.x*viewWidth;
-			atom.y=atom.y*viewHeight;
 			myPaint.setTextSize(determineMaxTextSize(atom.name,(viewWidth*viewHeight)/relativeFontSizeConstant));
-			canvas.drawText(atom.name, (float) atom.x, (float) atom.y, myPaint);
+			canvas.drawText(atom.name, (float) (atom.x*viewWidth), (float) (atom.y*viewHeight), myPaint);
 		}
 		for(Bond bond : bondList){
 			float singleXoff1=0;

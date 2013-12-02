@@ -73,14 +73,11 @@ public class ChemicalAdapter extends BaseAdapter {
 		Chemical molecule = mList.get(position);
 		
 		holder.text1.setText(molecule.name);
-		System.out.println(molecule.name);
 		if(formulaSubtitle){
 			holder.text2.setText(molecule.formula);
-			System.out.println(molecule.formula);
 		}
 		else{
 			holder.text2.setText(molecule.molecular_weight + "u");
-			System.out.println(molecule.molecular_weight + "u");
 		}
 		
 		return convertView;

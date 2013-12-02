@@ -1,5 +1,8 @@
 package com.example.moleculeviewer;
 
+//import java.util.Arrays;
+//import java.util.List;
+
 import android.os.Bundle;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -11,24 +14,36 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
 
-public class DataActivity extends Activity {
+public class MoleculeActivity extends Activity {
 	private Chemical molecule;
+	private TextView data_text;
+	private TwoDModelView moleculeView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_data);
+		setContentView(R.layout.activity_molecule);
 		
-		// get molecule name from parent activity
+		// molecule name from parent activity
 		Intent intent = getIntent();
 		molecule = (Chemical)intent.getSerializableExtra("SELECTED_MOLECULE");
-		TextView placeholder = (TextView) findViewById(R.id.placeholder_text);
-		placeholder.setText("Data for " + molecule.name);
+		moleculeView= (TwoDModelView) findViewById(R.id.two_d_view);
+		data_text = (TextView)findViewById(R.id.data_text);
+		
+		// construct data
+		StringBuilder data = new StringBuilder();
+		data.append("Molecular Formula:\n" + molecule.formula + "\n\n");
+		data.append("Molecular Weight:\n" + molecule.molecular_weight + "u\n\n");
+		data.append("SMILES Bond Notation:\n" + molecule.bond_string);
+		
+		data_text.setText(data.toString());
 		
 		// set up action bar
 		setupActionBar();
+		
+		moleculeView.initData();
 	}
-
+	
 	/**
 	 * Set up the {@link android.app.ActionBar}, if the API is available.
 	 */
@@ -38,14 +53,14 @@ public class DataActivity extends Activity {
 			ActionBar ab = getActionBar();
 			ab.setDisplayHomeAsUpEnabled(true);
 			ab.setTitle(molecule.name);
-			ab.setSubtitle("Data");
+			ab.setSubtitle("2D Model");
 		}
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.data, menu);
+		getMenuInflater().inflate(R.menu.molecule, menu);
 		return true;
 	}
 

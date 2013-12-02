@@ -1,0 +1,22 @@
+<ScrollView
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent" >
+
+	<LinearLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical" >
+	
+	    <com.example.moleculeviewer.TwoDModelView
+	        android:id="@+id/two_d_view"
+	        android:layout_width="fill_parent"
+	        android:layout_height="245dp" />
+	
+	    <TextView
+	        android:id="@+id/data_text"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"/>
+	
+	</LinearLayout>
+</ScrollView>
