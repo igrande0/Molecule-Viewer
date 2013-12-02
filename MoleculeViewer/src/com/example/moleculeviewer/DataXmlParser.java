@@ -73,27 +73,36 @@ public class DataXmlParser {
 		int bond_count = Integer.parseInt(data_array[1]);
 		ArrayList<Atom> atom_list = new ArrayList<Atom>();
 		int i = 0;
-		float maxX = 5;
-		float maxY = 5;
-		float maxZ = 5;
+		float maxX = 1;
+		float maxY = 1;
+		float maxZ = 1;
+		float minX = 9999;
+		float minY = 9999;
+		float minZ = 9999;
 		for(i=10; i<(10+atom_count*15); i += 15){
 			float x = Float.parseFloat(data_array[i]);
 			float y = Float.parseFloat(data_array[i+1]);
 			float z = Float.parseFloat(data_array[i+2]);
-			if(Math.abs(x)+1 > maxX)
-				maxX = Math.abs(x)+1;
-			if(Math.abs(y)+1 > maxY)
-				maxY = Math.abs(y)+1;
-			if(Math.abs(z)+1 > maxZ)
-				maxZ = Math.abs(z)+1;
+			if(x+1 > maxX)
+				maxX = x+1;
+			if(x-1 < minX)
+				minX= x-1;
+			if(y+1 > maxY)
+				maxY = y+1;
+			if(y-1 < minY)
+				minY= y-1;
+			if(z+1 > maxZ)
+				maxZ = z+1;
+			if(z-1 < minZ)
+				minZ= z-1;
 			String symbol = data_array[i+3];
 			atom_list.add(new Atom(x, y, z, symbol));
 		}
 		//divide all values by max
 		for(int j = 0; j<atom_list.size(); j++){
-			float temp_x = atom_list.get(j).x/maxX;
-			float temp_y = atom_list.get(j).y/maxY;
-			float temp_z = atom_list.get(j).z/maxZ;
+			float temp_x = (atom_list.get(j).x-minX)/(maxX-minX);
+			float temp_y = (atom_list.get(j).y-minY)/(maxY-minY);
+			float temp_z = (atom_list.get(j).z-minZ)/(maxZ-minZ);
 			String temp_symbol = atom_list.get(j).symbol;
 			atom_list.set(j, new Atom(temp_x, temp_y, temp_z, temp_symbol));
 		}

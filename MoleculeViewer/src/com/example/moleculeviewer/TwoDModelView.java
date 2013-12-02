@@ -106,8 +106,12 @@ public class TwoDModelView extends View {
 		for(Atom atom : molecule){
 			myPaint.setTextSize(determineMaxTextSize(atom.symbol,(viewWidth*viewHeight)/relativeFontSizeConstant));
 			System.out.println(atom.symbol + " " + atom.x + " " + atom.y);
-			if(atom.x < 1) atom.x=(atom.x*viewWidth + viewWidth)/2 ;
-			if(atom.y < 1) atom.y=(atom.y*viewHeight + viewHeight)/2;
+			if(atom.x < 1) atom.x=atom.x*viewWidth;
+			if(atom.y < 1) atom.y=atom.y*viewHeight;
+			if(molecule.size()==1){
+				atom.x=(float) (.5*viewWidth);
+				atom.y=(float) (.5*viewHeight);
+			}
 			canvas.drawText(atom.symbol, (float) (atom.x), (float) (atom.y), myPaint);
 		}
 		for(Bond bond : bondList){
