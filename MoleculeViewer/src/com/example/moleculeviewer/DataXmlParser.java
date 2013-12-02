@@ -73,36 +73,38 @@ public class DataXmlParser {
 		int bond_count = Integer.parseInt(data_array[1]);
 		ArrayList<Atom> atom_list = new ArrayList<Atom>();
 		int i = 0;
-		float max = 0;
-		for(i=10; i<atom_count; i += 15){
+		float maxX = 5;
+		float maxY = 5;
+		float maxZ = 5;
+		for(i=10; i<(10+atom_count*15); i += 15){
 			float x = Float.parseFloat(data_array[i]);
 			float y = Float.parseFloat(data_array[i+1]);
 			float z = Float.parseFloat(data_array[i+2]);
-			if(Math.abs(x) > max)
-				max = x;
-			if(Math.abs(y) > max)
-				max = y;
-			if(Math.abs(z) > max)
-				max = z;
+			if(Math.abs(x)+1 > maxX)
+				maxX = Math.abs(x)+1;
+			if(Math.abs(y)+1 > maxY)
+				maxY = Math.abs(y)+1;
+			if(Math.abs(z)+1 > maxZ)
+				maxZ = Math.abs(z)+1;
 			String symbol = data_array[i+3];
 			atom_list.add(new Atom(x, y, z, symbol));
 		}
 		//divide all values by max
 		for(int j = 0; j<atom_list.size(); j++){
-			float temp_x = atom_list.get(j).x/max;
-			float temp_y = atom_list.get(j).y/max;
-			float temp_z = atom_list.get(j).z/max;
+			float temp_x = atom_list.get(j).x/maxX;
+			float temp_y = atom_list.get(j).y/maxY;
+			float temp_z = atom_list.get(j).z/maxZ;
 			String temp_symbol = atom_list.get(j).symbol;
 			atom_list.set(j, new Atom(temp_x, temp_y, temp_z, temp_symbol));
 		}
 		ArrayList<Bond> bond_list = new ArrayList<Bond>();
-		while(i<bond_count){
+		while(i<(10+atom_count*15+bond_count*4)){
 			int atom1 = Integer.parseInt(data_array[i]);
 			int atom2 = Integer.parseInt(data_array[i+1]);
 			int bonds = Integer.parseInt(data_array[i+2]);
 			Bond bond = new Bond(atom1, atom2, bonds);
 			bond_list.add(bond);
-			i += 6;
+			i += 4;
 		}
 		Structure structure = new Structure(atom_list, bond_list);
 		

@@ -41,7 +41,8 @@ public class MoleculeActivity extends Activity {
 		// set up action bar
 		setupActionBar();
 		
-		moleculeView.initData();
+		//moleculeView.initData();
+		moleculeView.drawMolecule(molecule);
 	}
 	
 	/**
@@ -78,7 +79,4 @@ public class MoleculeActivity extends Activity {
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
 		}
-		return super.onOptionsItemSelected(item);
-	}
-
-}
+		return 
