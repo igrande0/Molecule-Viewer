@@ -79,4 +79,7 @@ public class MoleculeActivity extends Activity {
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
 		}
-		return 
+		return super.onOptionsItemSelected(item);
+	}
+
+}

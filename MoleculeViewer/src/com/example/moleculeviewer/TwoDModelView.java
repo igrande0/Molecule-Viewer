@@ -186,4 +186,68 @@ public class TwoDModelView extends View {
 					singleYoff2=-(myPaint.measureText(secondBondAtom.symbol.substring(0, 1))+idealPixelOffset);
 					doubleXoff1=myPaint.measureText(firstBondAtom.symbol)/4; doubleXoff3=3*myPaint.measureText(firstBondAtom.symbol)/4;
 					doubleXoff2=myPaint.measureText(secondBondAtom.symbol)/4; doubleXoff4=3*myPaint.measureText(secondBondAtom.symbol)/4;
-					doubleYoff1=(myPaint.measureText(secondBondAtom.symbol.substring(0, 1))/2); doubleYoff3=(myPaint.measureText(
+					doubleYoff1=(myPaint.measureText(secondBondAtom.symbol.substring(0, 1))/2); doubleYoff3=(myPaint.measureText(secondBondAtom.symbol.substring(0, 1))/2);
+					doubleYoff2=-(myPaint.measureText(secondBondAtom.symbol.substring(0, 1))+idealPixelOffset); doubleYoff4=-(myPaint.measureText(secondBondAtom.symbol.substring(0, 1))+idealPixelOffset);
+				}
+				else{
+					singleXoff1=myPaint.measureText(firstBondAtom.symbol)/2;
+					singleXoff2=myPaint.measureText(secondBondAtom.symbol)/2;
+					singleYoff1=-(myPaint.measureText(secondBondAtom.symbol.substring(0, 1)));
+					singleYoff2=(myPaint.measureText(secondBondAtom.symbol.substring(0, 1))/2);
+					doubleXoff1=myPaint.measureText(firstBondAtom.symbol)/4; doubleXoff3=3*myPaint.measureText(firstBondAtom.symbol)/4;
+					doubleXoff2=myPaint.measureText(secondBondAtom.symbol)/4; doubleXoff4=3*myPaint.measureText(secondBondAtom.symbol)/4;
+					doubleYoff1=-(myPaint.measureText(secondBondAtom.symbol.substring(0, 1))/2); doubleYoff3=-(myPaint.measureText(secondBondAtom.symbol.substring(0, 1))/2);
+					doubleYoff2=(myPaint.measureText(secondBondAtom.symbol.substring(0, 1))); doubleYoff4=(myPaint.measureText(secondBondAtom.symbol.substring(0, 1)));
+				}
+				specialCase=true;
+			}
+			else if(firstBondAtom.y - secondBondAtom.y == 0){
+				if(firstBondAtom.x < secondBondAtom.x){
+					singleXoff1=myPaint.measureText(firstBondAtom.symbol);
+					singleXoff2=-(myPaint.measureText(secondBondAtom.symbol.substring(0, 1))/2);
+					singleYoff1=-(myPaint.measureText(firstBondAtom.symbol.substring(0, 1))/2);
+					singleYoff2=-(myPaint.measureText(secondBondAtom.symbol.substring(0, 1))/2);
+					doubleXoff1=myPaint.measureText(firstBondAtom.symbol); doubleXoff3=myPaint.measureText(firstBondAtom.symbol);
+					doubleXoff2=-(myPaint.measureText(secondBondAtom.symbol.substring(0, 1))/2); doubleXoff4=-(myPaint.measureText(secondBondAtom.symbol.substring(0, 1))/2);
+					doubleYoff1=-(myPaint.measureText(firstBondAtom.symbol.substring(0, 1))/4); doubleYoff3=-(3*myPaint.measureText(firstBondAtom.symbol.substring(0, 1))/4);
+					doubleYoff2=-(myPaint.measureText(secondBondAtom.symbol.substring(0, 1))/4); doubleYoff4=-(3*myPaint.measureText(secondBondAtom.symbol.substring(0, 1))/4);
+				}
+				else{
+					singleXoff1=-(myPaint.measureText(firstBondAtom.symbol.substring(0, 1))/2);
+					singleXoff2=(myPaint.measureText(secondBondAtom.symbol.substring(0, 1)));
+					singleYoff1=-(myPaint.measureText(firstBondAtom.symbol.substring(0, 1))/2);
+					singleYoff2=-(myPaint.measureText(secondBondAtom.symbol.substring(0, 1))/2);
+					doubleXoff1=-myPaint.measureText(firstBondAtom.symbol); doubleXoff3=-myPaint.measureText(firstBondAtom.symbol);
+					doubleXoff2=(myPaint.measureText(secondBondAtom.symbol.substring(0, 1))/2); doubleXoff4=(myPaint.measureText(secondBondAtom.symbol.substring(0, 1))/2);
+					doubleYoff1=-(myPaint.measureText(firstBondAtom.symbol.substring(0, 1))/4); doubleYoff3=-(3*myPaint.measureText(firstBondAtom.symbol.substring(0, 1))/4);
+					doubleYoff2=-(myPaint.measureText(secondBondAtom.symbol.substring(0, 1))/4); doubleYoff4=-(3*myPaint.measureText(secondBondAtom.symbol.substring(0, 1))/4);
+				}
+				specialCase=true;
+			}
+
+			System.out.println("Xoff1" + singleXoff1 + " Xoff2" + singleXoff2 + " Yoff1"+singleYoff1+" Yoff2"+singleYoff2);
+			
+			switch(bond.bond_number){
+			case 1: //single
+				myPaint.setColor(Color.DKGRAY);
+				canvas.drawLine( (float) firstBondAtom.x + singleXoff1, (float) firstBondAtom.y + singleYoff1, (float) secondBondAtom.x + singleXoff2, (float) secondBondAtom.y + singleYoff2, myPaint);
+				myPaint.setStyle(Paint.Style.FILL);
+				myPaint.setColor(Color.BLACK);
+				if(!specialCase){
+					canvas.drawCircle((float) firstBondAtom.x + singleXoff1, (float) firstBondAtom.y + singleYoff1, 5, myPaint);
+					canvas.drawCircle((float) secondBondAtom.x + singleXoff2, (float) secondBondAtom.y + singleYoff2, 5, myPaint);
+				}
+				break;
+			case 2: //double
+				myPaint.setColor(Color.DKGRAY);
+				canvas.drawLine( (float) firstBondAtom.x + doubleXoff1, (float) firstBondAtom.y + doubleYoff1, (float) secondBondAtom.x + doubleXoff2, (float) secondBondAtom.y + doubleYoff2, myPaint);
+				canvas.drawLine( (float) firstBondAtom.x + doubleXoff3, (float) firstBondAtom.y + doubleYoff3, (float) secondBondAtom.x + doubleXoff4, (float) secondBondAtom.y + doubleYoff4, myPaint);
+				break;
+			default: //Unknown, single drawn
+				myPaint.setColor(Color.DKGRAY);
+				canvas.drawLine( (float) firstBondAtom.x + singleXoff1, (float) firstBondAtom.y + singleYoff1, (float) secondBondAtom.x + singleXoff2, (float) secondBondAtom.y + singleYoff2, myPaint);
+				break;
+			}
+		}
+	}
+}
