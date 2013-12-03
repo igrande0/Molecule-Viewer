@@ -34,13 +34,17 @@ public class Chemical implements Serializable {
     
     public static Comparator<Chemical> MolecularWeightAscending = new Comparator<Chemical>() {
     	public int compare(Chemical c1, Chemical c2){
-    		return c1.molecular_weight.compareTo(c2.molecular_weight);
+    		Double chem1 = Double.parseDouble(c1.molecular_weight);
+    		Double chem2 = Double.parseDouble(c2.molecular_weight);
+    		return chem1.compareTo(chem2);
     	}
     };
     
     public static Comparator<Chemical> MolecularWeightDescending = new Comparator<Chemical>() {
     	public int compare(Chemical c1, Chemical c2){
-    		return -c1.molecular_weight.compareTo(c2.molecular_weight);
+    		Double chem1 = Double.parseDouble(c1.molecular_weight);
+    		Double chem2 = Double.parseDouble(c2.molecular_weight);
+    		return -chem1.compareTo(chem2);
     	}
     };
     

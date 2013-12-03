@@ -12,5 +12,13 @@
     <string name="title_activity_two_dmodel">TwoDModelActivity</string>
     <string name="title_activity_three_dmodel">ThreeDModelActivity</string>
     <string name="title_activity_data">DataActivity</string>
+    <string-array name="sort_list">
+        <item>Name ↓</item>
+        <item>Name ↑</item>
+        <item>Formula ↓</item>
+        <item>Formula ↑</item>
+        <item>Weight ↓</item>
+        <item>Weight ↑</item>
+    </string-array>
 
 </resources>

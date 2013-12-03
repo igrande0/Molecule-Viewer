@@ -7,14 +7,18 @@ import java.util.Locale;
 
 import android.os.Bundle;
 import android.app.ActionBar;
+import android.app.ActionBar.OnNavigationListener;
 import android.app.Activity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SpinnerAdapter;
 import android.support.v4.app.NavUtils;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
@@ -25,7 +29,95 @@ public class SearchActivity extends Activity {
 	private ArrayList<Chemical> Chemicals = new ArrayList<Chemical>();
 	private ArrayList<Chemical> searchResults = new ArrayList<Chemical>();
 	private ChemicalAdapter mAdapter;
+	private SpinnerAdapter mSpinnerAdapter;
+	private ActionBar ab;
 	private boolean isSearch = false;
+	
+	@SuppressLint("NewApi")
+	private OnNavigationListener mOnNavigationListener = new OnNavigationListener() {
+		
+		@Override
+		public boolean onNavigationItemSelected(int position, long itemId) {
+			switch(position) {
+				// name ascending
+				case 0:
+					mAdapter.setFormulaSubtitle();
+					if(isSearch){
+						Collections.sort(searchResults, Chemical.NameAscending);
+						mAdapter.updateAdapter(searchResults);
+					}
+					else {
+						Collections.sort(Chemicals, Chemical.NameAscending);
+						mAdapter.updateAdapter(Chemicals);
+					}
+					break;
+				// name descending
+				case 1:
+					mAdapter.setFormulaSubtitle();
+					if(isSearch){
+						Collections.sort(searchResults, Chemical.NameDescending);
+						mAdapter.updateAdapter(searchResults);
+					}
+					else {
+						Collections.sort(Chemicals, Chemical.NameDescending);
+						mAdapter.updateAdapter(Chemicals);
+					}
+					break;
+				// formula ascending
+				case 2:
+					mAdapter.setFormulaSubtitle();
+					if(isSearch){
+						Collections.sort(searchResults, Chemical.FormulaAscending);
+						mAdapter.updateAdapter(searchResults);
+					}
+					else {
+						Collections.sort(Chemicals, Chemical.FormulaAscending);
+						mAdapter.updateAdapter(Chemicals);
+					}
+					break;
+				// formula descending
+				case 3:
+					mAdapter.setFormulaSubtitle();
+					if(isSearch){
+						Collections.sort(searchResults, Chemical.FormulaDescending);
+						mAdapter.updateAdapter(searchResults);
+					}
+					else {
+						Collections.sort(Chemicals, Chemical.FormulaDescending);
+						mAdapter.updateAdapter(Chemicals);
+					}
+					break;
+				// weight ascending
+				case 4:
+					mAdapter.setWeightSubtitle();
+					if(isSearch){
+						Collections.sort(searchResults, Chemical.MolecularWeightAscending);
+						mAdapter.updateAdapter(searchResults);
+					}
+					else {
+						Collections.sort(Chemicals, Chemical.MolecularWeightAscending);
+						mAdapter.updateAdapter(Chemicals);
+					}
+					break;
+				// weight descending
+				case 5:
+					mAdapter.setWeightSubtitle();
+					if(isSearch){
+						Collections.sort(searchResults, Chemical.MolecularWeightDescending);
+						mAdapter.updateAdapter(searchResults);
+					}
+					else {
+						Collections.sort(Chemicals, Chemical.MolecularWeightDescending);
+						mAdapter.updateAdapter(Chemicals);
+					}
+					break;
+				default:
+					break;
+			}
+			//ab.setSubtitle("Sorted by: " + strings[position]);
+			return true;
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +125,7 @@ public class SearchActivity extends Activity {
 		setContentView(R.layout.activity_search);
 
 		mAdapter = new ChemicalAdapter(this, Chemicals);
+		mSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.sort_list, android.R.layout.simple_spinner_dropdown_item);
 		mListView = (ListView) findViewById(R.id.list_view);
 		mListView.setAdapter(mAdapter);
 		mListView.setOnItemClickListener(new OnItemClickListener(){
@@ -86,14 +179,17 @@ public class SearchActivity extends Activity {
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void setupActionBar(String search) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			ActionBar ab = getActionBar();
+			ab = getActionBar();
 			ab.setDisplayHomeAsUpEnabled(true);
 			if(!search.equals("")) {
-				setTitle("Search: " + search);
+				ab.setTitle("Search: " + search);
 			}
 			else {
-				setTitle("All Molecules");
+				ab.setTitle("All Molecules");	
 			}
+			//ab.setSubtitle("Sorted by: Name \u2194");
+			ab.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+			ab.setListNavigationCallbacks(mSpinnerAdapter,mOnNavigationListener);
 		}
 	}
 
