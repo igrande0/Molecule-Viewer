@@ -1,4 +1,4 @@
 Molecule-Viewer
 ===============
 
-An Android application for viewing 2D and 3D models of molecules.
+An Android application for viewing 2D models of molecules.
